@@ -1,5 +1,7 @@
 module Saasu
   class Base
+    attr_reader :attributes
+
     def initialize(params = {})
       @attributes = params.deep_stringify_keys
     end

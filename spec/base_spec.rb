@@ -41,25 +41,33 @@ describe Saasu::Base do
 
   describe "#save" do
     it 'returns records' do
-      skip
-    end
-  end
+      record = Saasu::Test.new
+      record['Name'] = 'Tester'
+      expect(record.save).to be true
+      expect(record.id).to eq 123
+      expect(record.surname).to eq 'Spade'
 
-  describe "#update" do
-    it 'returns records' do
-      skip
+      expect(a_request(:post, "https://api.saasu.com/test?FileId=777")).to have_been_made
     end
   end
 
   describe "#create" do
     it 'returns records' do
-      skip
+      record = Saasu::Test.create(GivenName: 'Jack')
+      expect(record.id).to eq 765
+      expect(record.surname).to eq 'Sparrow'
+
+      expect(a_request(:post, "https://api.saasu.com/test?FileId=777")).to have_been_made
     end
   end
 
   describe "#delete" do
     it 'returns records' do
-      skip
+      record = Saasu::Test.create(GivenName: 'Jack')
+      record.delete
+      expect(record.id).to be_nil
+
+      expect(a_request(:delete, "https://api.saasu.com/test/765?FileId=777")).to have_been_made
     end
   end
 
@@ -75,6 +83,28 @@ describe Saasu::Base do
       with(body: { grant_type: 'password', scope: 'full', username: 'user@saasu.com', password: 'password' },
       headers: {'Content-Type'=>'application/json', 'X-Api-Version'=>'1.0'}).
       to_return(status: 200, body: { access_token: '12345', refresh_token: '67890', expires_in: 1000 }.to_json, headers: {'Content-Type'=>'application/json'})
+
+    stub_request(:post, 'https://api.saasu.com/test?FileId=777').
+      with(body: { Name: 'Tester' },
+      headers: {'Content-Type'=>'application/json', 'X-Api-Version'=>'1.0'}).
+      to_return(status: 200, body: { Id: 123 }.to_json, headers: {'Content-Type'=>'application/json'})
+
+    stub_request(:post, 'https://api.saasu.com/test?FileId=777').
+      with(body: { GivenName: 'Jack' },
+      headers: {'Content-Type'=>'application/json', 'X-Api-Version'=>'1.0'}).
+      to_return(status: 200, body: { Id: 765 }.to_json, headers: {'Content-Type'=>'application/json'})
+
+    stub_request(:get, "https://api.saasu.com/test/123?FileId=777").
+      with(headers: {'Authorization' => 'Bearer 12345', 'X-Api-Version'=>'1.0'}).
+      to_return(status: 200, body: { "Id" => 123, Surname: 'Spade'}.to_json, headers: {'Content-Type'=>'application/json'})
+
+    stub_request(:get, "https://api.saasu.com/test/765?FileId=777").
+      with(headers: {'Authorization' => 'Bearer 12345', 'X-Api-Version'=>'1.0'}).
+      to_return(status: 200, body: { "Id" => 765, Surname: 'Sparrow'}.to_json, headers: {'Content-Type'=>'application/json'})
+
+    stub_request(:delete, "https://api.saasu.com/test/765?FileId=777").
+      with(headers: {'Authorization' => 'Bearer 12345', 'X-Api-Version'=>'1.0'}).
+      to_return(status: 200, body: { "StatusMessage" => "Ok" }.to_json, headers: {'Content-Type'=>'application/json'})
 
     stub_request(:get, 'https://api.saasu.com/tests?FileId=777').
       with(headers: {'X-Api-Version'=>'1.0', 'Authorization'=>'Bearer 12345'}).
