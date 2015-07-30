@@ -1,18 +1,72 @@
 require 'spec_helper'
 
 describe Saasu::Base do
-  describe "#all" do
-    before do
-      Saasu::Config.username = "user@saasu.com"
-      Saasu::Config.password = "password"
-      Saasu::Config.file_id  = 777
+  before do
+    Saasu::Config.username = "user@saasu.com"
+    Saasu::Config.password = "password"
+    Saasu::Config.file_id  = 777
 
-      mock_api_requests
+    mock_api_requests
+  end
+
+  describe "#all" do
+    it 'returns records' do
+      expect(Saasu::Test.all.count).to eq 1
+    end
+  end
+
+  describe "#find" do
+    it 'returns records' do
+      expect(Saasu::Test.find(1)['id']).to eq 76543
+      expect(Saasu::Test.find(2)['id']).to eq 98765
+    end
+  end
+
+  describe "#where" do
+    it 'validates filters' do
+      expect{ Saasu::Test.where({ Name: 1 }) }.to raise_error
+      expect{ Saasu::Test.where({ FirstName: 1 }) }.not_to raise_error
     end
 
-    specify do
-      expect(Saasu::Test.all.count).to eq 1
-    end    
+    context 'method not implemented' do
+      it 'raises an error' do
+        expect{ Saasu::TestTwo.where({ Id: 1 }) }.to raise_error
+      end
+    end
+
+    it 'returns records' do
+      expect(Saasu::Test.where({ FirstName: 'Tester' }).first['id']).to eq 112233
+    end
+  end
+
+  describe "#save" do
+    it 'returns records' do
+      skip
+    end
+  end
+
+  describe "#update" do
+    it 'returns records' do
+      skip
+    end
+  end
+
+  describe "#create" do
+    it 'returns records' do
+      skip
+    end
+  end
+
+  describe "#delete" do
+    it 'returns records' do
+      skip
+    end
+  end
+
+  describe "#validate_method_is_implemented_in_saasu_api" do
+    it 'raises an exception when a method is not implemented in Saasu API' do
+      expect { Saasu::Test.create({}) }.to raise_error
+    end
   end
 
   private
@@ -25,10 +79,30 @@ describe Saasu::Base do
     stub_request(:get, 'https://api.saasu.com/tests?FileId=777').
       with(headers: {'X-Api-Version'=>'1.0', 'Authorization'=>'Bearer 12345'}).
       to_return(status: 200, body: { contacts: [{id: 1234, first_name: 'John'}] }.to_json, headers: {'Content-Type'=>'application/json'})
+
+    stub_request(:get, 'https://api.saasu.com/test/1?FileId=777').
+      with(headers: {'X-Api-Version'=>'1.0', 'Authorization'=>'Bearer 12345'}).
+      to_return(status: 200, body: { id: 76543 }.to_json, headers: {'Content-Type'=>'application/json'})
+
+    stub_request(:get, 'https://api.saasu.com/test/2?FileId=777').
+      with(headers: {'X-Api-Version'=>'1.0', 'Authorization'=>'Bearer 12345'}).
+      to_return(status: 200, body: { id: 98765 }.to_json, headers: {'Content-Type'=>'application/json'})
+
+    stub_request(:get, 'https://api.saasu.com/tests?FileId=777&FirstName=1').
+      with(headers: {'X-Api-Version'=>'1.0', 'Authorization'=>'Bearer 12345'}).
+      to_return(status: 200, body: { "Values" => [ ] }.to_json, headers: {'Content-Type'=>'application/json'})
+
+    stub_request(:get, 'https://api.saasu.com/tests?FileId=777&FirstName=Tester').
+      with(headers: {'X-Api-Version'=>'1.0', 'Authorization'=>'Bearer 12345'}).
+      to_return(status: 200, body: { contacts: [{id: 112233}] }.to_json, headers: {'Content-Type'=>'application/json'})
   end
 end
 
 class Saasu::Test < Saasu::Base
-  allowed_methods :show, :index
+  allowed_methods :show, :index, :update, :create, :destroy
   filter_by %W(Id FirstName)
+end
+
+class Saasu::TestTwo < Saasu::Base
+  allowed_methods :show
 end

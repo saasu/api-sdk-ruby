@@ -12,9 +12,11 @@ module Saasu
         response = connection.send(method, request_url, params)
 
         if response.status == 200
-          response.body.values.first
+          response.body
+        elsif response.status == 404
+          raise "Resource not found."
         else
-          raise "Server did not return a valid response. Response status: #{response.status}."
+          raise "Server did not return a valid response. Response status: #{response.status}. Response body: #{response.body}"
         end
       end
 
@@ -27,7 +29,6 @@ module Saasu
         con = Faraday.new(url: api_url) do |c|
           c.request :json
 
-          # c.response :logger
           c.response :json, :content_type => /\bjson$/
 
           c.use :instrumentation
