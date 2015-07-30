@@ -2,6 +2,9 @@
 This repository is a version of the Saasu software development kit in the Ruby language, for working with the Saasu API.
 For help on the API itself, you can look at the [help documentation](https://api.saasu.com/)
 
+[![Gem Version](https://badge.fury.io/rb/saasu2.svg)](http://badge.fury.io/rb/saasu2)
+[![Build Status](https://travis-ci.org/nsinenko/saasu-rails.svg?branch=master)](https://travis-ci.org/nsinenko/saasu-rails)
+
 ## Installation
 
 Add this line to your application's Gemfile:
