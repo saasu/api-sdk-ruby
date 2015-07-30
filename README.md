@@ -32,7 +32,7 @@ You're now ready to connect your app to Saasu.
 
 ## Usage
 
-You can access the following object types:
+You can access the following objects:
 - Saasu::Account
 - Saasu::Company
 - Saasu::Contact
@@ -51,17 +51,17 @@ contacts = Saasu::Contact.all
 # find a contact by id
 contact = Saasu::Contact.find(123)
 
-# save.contact
+# save a contact
 contact.given_name = 'New Name'
 contact.save
 
-# delete contact
+# delete a contact
 contact.delete
 
-# create new contact
+# create a contact
 new_contact = Saasu::Contact.create({ GivenName => 'User' })
 
-# filter records, for a list of available filters for each object see https://api.saasu.com
+# filter records. for a list of available filters for each object see https://api.saasu.com
 contact = Saasu::Contact.where(GivenName: 'John')
 
 # get attributes
@@ -76,7 +76,7 @@ contact['GivenName'] = 'John'
 contact.attributes
 ```
 
-Note - Saasu uses .NET naming convention for fields and filters eg GivenName, LastModifiedDate.
+Note - Saasu uses .NET naming convention for fields and filters eg. GivenName, LastModifiedDate
 
 ## Contributing
 
