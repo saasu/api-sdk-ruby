@@ -1,0 +1,4 @@
+==== Version 0.1.2
+Features:
+* Add support #create, #update, #destroy methods for /Items API
+* Add support for /Search endpoint

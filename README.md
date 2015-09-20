@@ -24,7 +24,7 @@ require 'saasu'
 Saasu::Config.configure do |c|
   c.username = 'username@email.com'
   c.password = 'password'
-  c.file_id = 1234 # Your Saasu FileId can be found at
+  c.file_id = 1234 # Your Saasu FileId can be found at https://secure.saasu.com/a/net/webservicessettings.aspx
 end
 ```
 
@@ -41,6 +41,7 @@ You can access the following objects:
 - Saasu::Item
 - Saasu::Payment
 - Saasu::TaxCode
+- Saasu::Search
 
 Usage examples:
 
@@ -74,6 +75,14 @@ contact['GivenName'] = 'John'
 
 # get all attributes
 contact.attributes
+
+# Search. Available scopes: All, Transactions, Contacts, InventoryItems.
+query = Saasu::Search.new(keywords: 'Book', scope: 'All')
+query.perform
+
+query.contacts
+query.items
+query.invoices
 ```
 
 Note - Saasu uses .NET naming convention for fields and filters eg. GivenName, LastModifiedDate
