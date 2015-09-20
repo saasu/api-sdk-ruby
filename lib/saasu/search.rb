@@ -3,7 +3,7 @@ module Saasu
     VALID_SCOPES = %W(All Transactions Contacts InventoryItems)
     attr_accessor :scope, :keywords
 
-    def initialize(scope: nil, keywords:)
+    def initialize(keywords, scope = 'All')
       @scope = scope
       @keywords = keywords
 
@@ -35,11 +35,7 @@ module Saasu
 
     private
     def perform_search!
-      @search_results = Saasu::Client.request(:get, 'search', { Scope: scope, Keywords: @keywords, IncludeSearchTermHighlights: false })
-    end
-
-    def scope
-      @scope ||= 'All'
+      @search_results = Saasu::Client.request(:get, 'search', { Scope: @scope, Keywords: @keywords, IncludeSearchTermHighlights: false })
     end
 
     def search_results
@@ -47,7 +43,7 @@ module Saasu
     end
 
     def validate_scope!
-      unless scope.in? VALID_SCOPES
+      unless @scope.in? VALID_SCOPES
         raise "Invalid scope argument. Valid values are: #{VALID_SCOPES.join(', ')}"
       end
     end

@@ -11,7 +11,7 @@ describe Saasu::Search do
 
   describe ".search" do
     it 'uses the default scope when no scope specified' do
-      query = Saasu::Search.new(keywords: 'Customer')
+      query = Saasu::Search.new('Customer')
       expect(query.perform).to eq({ contacts: 8, invoices: 10, items: 15 })
       expect(a_request(:get, "https://api.saasu.com/search?FileId=777&IncludeSearchTermHighlights=false&Keywords=Customer&Scope=All"))
         .to have_been_made

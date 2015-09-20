@@ -77,7 +77,7 @@ contact['GivenName'] = 'John'
 contact.attributes
 
 # Search. Available scopes: All, Transactions, Contacts, InventoryItems.
-query = Saasu::Search.new(keywords: 'Book', scope: 'All')
+query = Saasu::Search.new('Book', 'InventoryItems')
 query.perform
 
 query.contacts
