@@ -11,6 +11,7 @@ require "saasu/account"
 require "saasu/tax_code"
 require "saasu/config"
 require "saasu/auth"
+require "saasu/search"
 
 module Saasu
 end
