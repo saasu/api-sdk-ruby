@@ -42,6 +42,9 @@ You can access the following objects:
 - Saasu::Payment
 - Saasu::TaxCode
 - Saasu::Search
+- Saasu::User
+- Saasu::FileIdentity
+- Saasu::ContactAggregate
 
 Usage examples:
 
@@ -76,13 +79,25 @@ contact['GivenName'] = 'John'
 # get all attributes
 contact.attributes
 
-# Search. Available scopes: All, Transactions, Contacts, InventoryItems.
+# Search. Available scopes: All, Transactions, Contacts, InventoryItems. 
 query = Saasu::Search.new('Book', 'InventoryItems')
 query.perform
 
 query.contacts
 query.items
 query.invoices
+
+# You can filter search results by transaction type - Sale, Purchase, Journal, Payroll
+query = Saasu::Search.new('Book', scope: 'InventoryItems', transaction_type: 'Sale')
+
+# or you can use the default scope - 'All'
+query = Saasu::Search.new('Book', transaction_type: 'Purchase')
+
+# reset user password
+Saasu::User.reset_password('user@saasu.com')
+
+# list the set of files a user has access to
+Saasu::FileIdentity.all
 ```
 
 Note - Saasu uses .NET naming convention for fields and filters eg. GivenName, LastModifiedDate

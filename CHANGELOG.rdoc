@@ -1,3 +1,11 @@
+==== Version 0.1.4
+Features:
+* Saasu::User.reset_password – Allows a user to request that a password reset email be generated and sent to them.
+* Sassu::FileIdentity - list the set of files a user has access to.
+* Saasu::ContactAggregate - allows a user to add a Contact with a related company and contact manager in one call. This can also be retrieved and updated BUT NO delete operation is allowed.
+* Saasu::Search - new filtering options for transaction_type.
+* Saasu::Invoice#email - allows emailing to the contact on the invoice or emailing to a specified email address.
+
 ==== Version 0.1.2
 Features:
 * Add support #create, #update, #destroy methods for /Items API
