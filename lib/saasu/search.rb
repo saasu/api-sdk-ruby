@@ -3,8 +3,17 @@ module Saasu
     VALID_SCOPES = %W(All Transactions Contacts InventoryItems)
     attr_accessor :scope, :keywords
 
-    def initialize(keywords, scope = 'All')
-      @scope = scope
+    # allowed params:
+    # :scope - All, Transactions, Contacts, InventoryItems
+    # :transaction_type - Sale, Purchase, Journal, Payroll
+    def initialize(keywords, params = {})
+      if params.is_a?(Hash)
+        @scope = params[:scope].presence || 'All'
+        @transaction_type = "Transactions.#{params[:transaction_type]}" if params[:transaction_type].present?
+      else
+        @scope = params
+      end
+
       @keywords = keywords
 
       validate_scope!
@@ -34,8 +43,14 @@ module Saasu
     end
 
     private
+    def search_params
+      _params = { Scope: @scope, Keywords: @keywords, IncludeSearchTermHighlights: false }
+      _params[:TransactionType] = @transaction_type if @transaction_type.present?
+      _params
+    end
+
     def perform_search!
-      @search_results = Saasu::Client.request(:get, 'search', { Scope: @scope, Keywords: @keywords, IncludeSearchTermHighlights: false })
+      @search_results = Saasu::Client.request(:get, 'search', search_params)
     end
 
     def search_results

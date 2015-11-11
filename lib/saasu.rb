@@ -12,6 +12,9 @@ require "saasu/tax_code"
 require "saasu/config"
 require "saasu/auth"
 require "saasu/search"
+require "saasu/user"
+require "saasu/file_identity"
+require "saasu/contact_aggregate"
 
 module Saasu
 end
