@@ -22,7 +22,7 @@ describe Saasu::Search do
       expect(query.perform).to eq({ contacts: 9, invoices: 8, items: 7 })
       expect(a_request(:get, "https://api.saasu.com/search?FileId=777&IncludeSearchTermHighlights=false&Keywords=Customer&Scope=All&TransactionType=Transactions.Sale"))
         .to have_been_made
-    end    
+    end
   end
 
   private
@@ -33,11 +33,11 @@ describe Saasu::Search do
       to_return(status: 200, body: { access_token: '12345', refresh_token: '67890', expires_in: 1000 }.to_json, headers: {'Content-Type'=>'application/json'})
 
     stub_request(:get, "https://api.saasu.com/search?FileId=777&IncludeSearchTermHighlights=false&Keywords=Customer&Scope=All").
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Authorization'=>'Bearer 12345', 'User-Agent'=>'Faraday v0.9.1', 'X-Api-Version'=>'1.0'}).
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Authorization'=>'Bearer 12345', 'X-Api-Version'=>'1.0'}).
       to_return(:status => 200, body: search_results.to_json, :headers => {'Content-Type'=>'application/json'})
 
     stub_request(:get, "https://api.saasu.com/search?FileId=777&IncludeSearchTermHighlights=false&Keywords=Customer&Scope=All&TransactionType=Transactions.Sale").
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Authorization'=>'Bearer 12345', 'User-Agent'=>'Faraday v0.9.1', 'X-Api-Version'=>'1.0'}).
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Authorization'=>'Bearer 12345', 'X-Api-Version'=>'1.0'}).
       to_return(:status => 200, body: search_results_with_transaction_type.to_json, :headers => {'Content-Type'=>'application/json'})
   end
 
