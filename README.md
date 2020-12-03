@@ -20,6 +20,7 @@ And then execute:
 Create an initializer file with your Saasu configuration eg config/initilizers/saasu.rb
 ```ruby
 require 'saasu'
+require 'deep_hash_transform' #required if using Rails <4
 
 Saasu::Config.configure do |c|
   c.username = 'username@email.com'

@@ -30,4 +30,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "faraday_middleware"
   spec.add_dependency "webmock"
   spec.add_dependency 'activesupport'
+  # make rails 4+ deep hash functions available to rails <4
+  spec.add_dependency 'deep_hash_transform'
 end
