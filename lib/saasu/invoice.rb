@@ -28,7 +28,10 @@ class Saasu::Invoice < Saasu::Base
       url = ['Invoice', id, 'generate-pdf'].join('/')
       params = {}
     end
-
-    Saasu::Client.request(:get, url, params)
+    begin
+      Saasu::Client.request(:get, url, params)
+    rescue Faraday::Error::ParsingError => e
+      raise Saasu::InvalidResponseError.new("784", e.message, "")
+    end
   end
 end
