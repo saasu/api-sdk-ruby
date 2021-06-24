@@ -1,3 +1,6 @@
+==== Version 0.1.5
+* Allow setting of PageSize and Page
+
 ==== Version 0.1.4
 Features:
 * Saasu::User.reset_password – Allows a user to request that a password reset email be generated and sent to them.

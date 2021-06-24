@@ -17,9 +17,10 @@ RSpec.configure do |config|
   end
 
   config.mock_with :rspec
-  config.treat_symbols_as_metadata_keys_with_true_values = true
   config.color = :enabled
   config.order = :random
 end
+
+RSpec::Expectations.configuration.on_potential_false_positives = :nothing
 
 Dir[File.dirname(__FILE__) + '*.rb'].each { |file| require_relative file }

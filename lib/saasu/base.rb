@@ -113,7 +113,7 @@ module Saasu
     end
 
     def id
-      @attributes['Id']
+      @attributes.has_key?('Id') ? @attributes['Id'] : @attributes['TransactionId']
     end
 
     protected

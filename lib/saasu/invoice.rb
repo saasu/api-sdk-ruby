@@ -1,6 +1,6 @@
 class Saasu::Invoice < Saasu::Base
   allowed_methods :show, :index, :destroy, :update, :create
-  filter_by %W(InvoiceNumber LastModifiedFromDate LastModifiedToDate TransactionType Tags TagSelection InvoiceFromDate InvoiceToDate InvoiceStatus PaymentStatus ContactId)
+  filter_by %W(InvoiceNumber PurchaseOrderNumber LastModifiedFromDate LastModifiedToDate TransactionType Tags TagSelection InvoiceFromDate InvoiceToDate InvoiceStatus PaymentStatus BillingContactId PageSize Page)
 
   def email(email_address = nil)
     if email_address.present?
@@ -12,5 +12,26 @@ class Saasu::Invoice < Saasu::Base
     end
 
     Saasu::Client.request(:post, url, params)
+  end
+
+  # Returns the pdf file as raw binary data in a String object
+  #
+  # if there is problem getting the PDF you will get a runtime error
+  #   e.g RuntimeError (Server did not return a valid response. URL: Invoice/9999/generate-pdf?FileId=9999. Response status: 400. Response body: Unable to perform the request.):
+  #
+  # this can happen if the tempate_id is invalid
+  def generate_pdf(template_id = nil)
+    if template_id.present?
+      url = ['Invoice', id, 'generate-pdf'].join('/')
+      params = { TemplateId: template_id }
+    else
+      url = ['Invoice', id, 'generate-pdf'].join('/')
+      params = {}
+    end
+    begin
+      Saasu::Client.request(:get, url, params)
+    rescue Faraday::Error::ParsingError => e
+      raise Saasu::InvalidResponseError.new("784", e.message, "")
+    end
   end
 end

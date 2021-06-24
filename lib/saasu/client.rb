@@ -14,9 +14,9 @@ module Saasu
         if response.status == 200
           response.body
         elsif response.status == 404
-          raise "Resource not found."
+          raise ResourceNotFoundError.new()
         else
-          raise "Server did not return a valid response. Response status: #{response.status}. Response body: #{response.body}"
+          raise InvalidResponseError.new(response.status, response.reason_phrase, response.body)
         end
       end
 
@@ -44,4 +44,21 @@ module Saasu
       end
     end
   end
+  
+  class ResourceNotFoundError < StandardError
+    def initialize(msg="Resource not found.")
+      super
+    end
+  end
+  
+  class InvalidResponseError < StandardError
+    attr_reader :status, :reason, :body
+    def initialize(status="",reason="",body="")
+      @status = status
+      @reason = reason
+      @body = body
+      super("Server did not return a valid response. Response status: #{status}. Reason phrase: #{reason}. Response body: #{body}")
+    end
+  end
+  
 end
